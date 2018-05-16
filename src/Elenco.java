@@ -52,7 +52,7 @@ public class Elenco
 		return carte[posizione];
 	}
 	
-	public boolean ricarica(String numeroCarta, float importo)
+	 public boolean  ricarica(String numeroCarta, float importo)
 	{
 		int posizione=cercaCarta(numeroCarta);
 		if (posizione<0)
@@ -60,12 +60,16 @@ public class Elenco
 		
 		float saldo;
 		
-		
-		saldo=carte[posizione].getSaldo();
+		synchronized (carte[posizione])
+		{
+			carte[posizione].setSaldo(carte[posizione].getSaldo()+importo);
+		}
+	/*	saldo=carte[posizione].getSaldo();
 		saldo=saldo+importo;
 		carte[posizione].setSaldo(saldo);
+		
+	*/	
 		return true;
-				
 	}
 	
 	public boolean pagamento (String numero, float importo)
@@ -74,9 +78,16 @@ public class Elenco
 		if (posizione <0)
 			return false;
 		float saldo;
-		saldo=carte[posizione].getSaldo();
+		
+		synchronized (carte[posizione])
+		{
+			carte[posizione].setSaldo(carte[posizione].getSaldo()-importo);
+		}
+		
+	/*	saldo=carte[posizione].getSaldo();
 		saldo=saldo-importo;
 		carte[posizione].setSaldo(saldo);
+	*/
 		return true;
 	}
 	
